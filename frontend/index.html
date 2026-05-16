@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cow Weight Prediction</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- LEFT -->
+    <div class="left-panel">
+
+        <div class="image-box">
+
+            <img id="preview" alt="Preview">
+
+            <div class="placeholder" id="placeholder">
+                Оберіть зображення
+            </div>
+
+        </div>
+
+        <div class="buttons">
+
+            <input type="file" id="fileInput" accept="image/*" hidden>
+
+            <button id="uploadImageBtn">Завантажити фото</button>
+
+        </div>
+
+    </div>
+
+    <!-- CENTER -->
+    <div class="center-panel">
+        <button id="uploadBtn" class="predict-btn">
+            Визначити вагу
+        </button>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right-panel">
+        <h2>Результат</h2>
+
+        <div id="resultContent">
+            <p class="default-text">
+                Результат передбачення з’явиться тут
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
