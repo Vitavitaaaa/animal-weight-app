@@ -85,6 +85,8 @@ async function sendImage(item) {
 
         const data = await response.json();
 
+        console.log("Response:", data);
+
         if (!data.success) {
             resultContent.innerHTML = `<p class="error">${data.error}</p>`;
             return;
@@ -99,6 +101,11 @@ async function sendImage(item) {
             <p class="success">Корова визначена</p>
 
             <div class="result-item">
+                <div class="result-label">Впевненість (корова)</div>
+                <div class="result-value">${data.cow_confidence}%</div>
+            </div>
+
+            <div class="result-item">
                 <div class="result-label">Вага</div>
                 <div class="result-value">${data.predicted_weight} кг</div>
             </div>
@@ -106,11 +113,6 @@ async function sendImage(item) {
             <div class="result-item">
                 <div class="result-label">MAPE</div>
                 <div class="result-value">${data.mape}%</div>
-            </div>
-
-            <div class="result-item">
-                <div class="result-label">Accuracy</div>
-                <div class="result-value">${data.classifier_confidence}%</div>
             </div>
         `;
 
