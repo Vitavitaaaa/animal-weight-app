@@ -1,0 +1,47 @@
+Folder PATH listing
+Volume serial number is 0A8C-3D12
+C:.
+¦   .gitignore
+¦   pytest.ini
+¦   README.md
+¦   requirements.txt
+¦   structure.txt
+¦   
++---backend
+¦   ¦   app.py
+¦   ¦   __init__.py
+¦   ¦   
+¦   +---models
+¦   ¦       classifier.py
+¦   ¦       regression.py
+¦   ¦       segmentation.py
+¦   ¦       
+¦   +---uploads
+¦   +---utils
+¦   ¦       inference.py
+¦   ¦       preprocess.py
+¦   ¦       transforms.py
+¦   ¦       
+¦   +---weights
+¦           cattle_classifier.pth
+¦           cattle_regressor.pth
+¦           cattle_segmentation.pth
+¦           
++---frontend
+¦       background.jpg
+¦       index.html
+¦       script.js
+¦       style.css
+¦       
++---tests
+        conftest.py
+        test_api.py
+        test_app.py
+        test_classifier.py
+        test_inference.py
+        test_inference_no_cow.py
+        test_preprocess.py
+        test_regression.py
+        test_segmentation.py
+        test_transforms.py
+        

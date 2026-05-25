@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:5000/predict";
+const API_URL = import.meta.env.VITE_API_URL;
 
 // =========================
 // ELEMENTS
@@ -45,7 +45,6 @@ fileInput.addEventListener("change", (e) => {
     if (!file) return;
 
     selected = {
-        type: "file",
         file: file,
         name: file.name
     };
@@ -85,8 +84,6 @@ async function sendImage(item) {
         });
 
         const data = await response.json();
-
-        console.log("Response:", data);
 
         if (!data.success) {
             resultContent.innerHTML = `<p class="error">${data.error}</p>`;

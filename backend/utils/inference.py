@@ -1,6 +1,7 @@
-import numpy as np
+from pathlib import Path
+
 import torch
-import os
+
 from backend.models.classifier import get_classifier
 from backend.models.segmentation import UNet
 from backend.models.regression import TwoStreamRegressor
@@ -12,10 +13,19 @@ from backend.utils.preprocess import (
     preprocess_regression
 )
 
+# =========================================================
+# DEVICE
+# =========================================================
 
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-WEIGHTS_DIR = os.path.join(BASE_DIR, "weights")
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# =========================================================
+# PATHS
+# =========================================================
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+WEIGHTS_DIR = BASE_DIR / "weights"
 
 # =========================================================
 # LOAD CLASSIFIER
@@ -24,8 +34,9 @@ WEIGHTS_DIR = os.path.join(BASE_DIR, "weights")
 classifier_model = get_classifier().to(DEVICE)
 
 classifier_checkpoint = torch.load(
-    os.path.join(WEIGHTS_DIR, "cattle_classifier.pth"),
-    map_location=DEVICE
+    WEIGHTS_DIR / "cattle_classifier.pth",
+    map_location=DEVICE,
+    weights_only=False
 )
 
 classifier_model.load_state_dict(
@@ -34,7 +45,6 @@ classifier_model.load_state_dict(
 
 classifier_model.eval()
 
-
 # =========================================================
 # LOAD SEGMENTATION
 # =========================================================
@@ -42,35 +52,44 @@ classifier_model.eval()
 segmentation_model = UNet().to(DEVICE)
 
 segmentation_checkpoint = torch.load(
-    os.path.join(WEIGHTS_DIR, "cattle_segmentation.pth"),
-    map_location=DEVICE
+    WEIGHTS_DIR / "cattle_segmentation.pth",
+    map_location=DEVICE,
+    weights_only=False
 )
 
 if "model_state_dict" in segmentation_checkpoint:
+
     segmentation_model.load_state_dict(
         segmentation_checkpoint["model_state_dict"]
     )
+
 else:
-    segmentation_model.load_state_dict(segmentation_checkpoint)
+
+    segmentation_model.load_state_dict(
+        segmentation_checkpoint
+    )
 
 segmentation_model.eval()
-
 
 # =========================================================
 # LOAD REGRESSION
 # =========================================================
 
-regression_model = TwoStreamRegressor(segmentation_model).to(DEVICE)
+regression_model = TwoStreamRegressor(
+    segmentation_model
+).to(DEVICE)
 
 regression_checkpoint = torch.load(
-    os.path.join(WEIGHTS_DIR, "cattle_regressor.pth"),
-    map_location=DEVICE
+    WEIGHTS_DIR / "cattle_regressor.pth",
+    map_location=DEVICE,
+    weights_only=False
 )
 
-regression_model.load_state_dict(regression_checkpoint)
+regression_model.load_state_dict(
+    regression_checkpoint
+)
 
 regression_model.eval()
-
 
 # =========================================================
 # CONFIG
@@ -79,7 +98,6 @@ regression_model.eval()
 CLASSIFICATION_THRESHOLD = 0.5
 
 MAPE_SCORE = 17.63
-
 
 # =========================================================
 # PIPELINE
@@ -96,12 +114,17 @@ def run_pipeline(image_path):
     cls_tensor = preprocess_classifier(image).to(DEVICE)
 
     with torch.no_grad():
+
         cls_output = classifier_model(cls_tensor)
-        cls_prob = torch.sigmoid(cls_output).item()
+
+        cls_prob = torch.sigmoid(
+            cls_output
+        ).item()
 
     is_cow = cls_prob > CLASSIFICATION_THRESHOLD
 
     if not is_cow:
+
         return {
             "success": True,
             "is_cow": False,
@@ -115,8 +138,13 @@ def run_pipeline(image_path):
     seg_tensor = preprocess_segmentation(image).to(DEVICE)
 
     with torch.no_grad():
+
         seg_logits = segmentation_model(seg_tensor)
-        seg_mask = torch.argmax(seg_logits, dim=1)
+
+        seg_mask = torch.argmax(
+            seg_logits,
+            dim=1
+        )
 
     # =====================================================
     # REGRESSION
@@ -125,14 +153,23 @@ def run_pipeline(image_path):
     reg_tensor = preprocess_regression(image).to(DEVICE)
 
     with torch.no_grad():
-        pred_weight = regression_model(reg_tensor)
 
-    pred_weight = round(pred_weight.item(), 2)
+        pred_weight = regression_model(
+            reg_tensor
+        )
+
+    pred_weight = round(
+        pred_weight.item(),
+        2
+    )
 
     return {
         "success": True,
         "is_cow": True,
         "predicted_weight": pred_weight,
         "mape": MAPE_SCORE,
-        "classifier_confidence": round(cls_prob * 100, 2)
+        "classifier_confidence": round(
+            cls_prob * 100,
+            2
+        )
     }

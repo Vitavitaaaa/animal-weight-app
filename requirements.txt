@@ -8,7 +8,9 @@ pillow==10.4.0
 torch==2.2.2
 torchvision==0.17.2
 
-gunicorn==22.0.0
+opencv-python-headless
+
+gunicorn
 
 pytest==8.3.2
 pytest-cov==5.0.0
