@@ -1,4 +1,4 @@
-const API_URL = "https://animal-weight-api.hf.space/predict";
+const API_URL = "https://vitoriia-animal-weight-api.hf.space/predict";
 
 // =========================
 // ELEMENTS
