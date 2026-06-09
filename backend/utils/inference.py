@@ -97,7 +97,7 @@ regression_model.eval()
 
 CLASSIFICATION_THRESHOLD = 0.5
 
-MAPE_SCORE = 17.63
+MAPE_SCORE = 13.40
 
 # =========================================================
 # PIPELINE
