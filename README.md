@@ -41,5 +41,7 @@ Results
 The developed system achieved:
 
 Classification Accuracy: 98.24%
+
 Segmentation IoU: 85.12%
-Weight Prediction MAE: 21.57 kg
+
+Weight Prediction MAE/MAPE: 21.57 kg/13.4%
