@@ -1,3 +1,4 @@
+
 const API_URL = "https://vitoriia-animal-weight-api.hf.space/predict";
 
 // =========================
@@ -58,7 +59,7 @@ fileInput.addEventListener("change", (e) => {
 uploadBtn.addEventListener("click", async () => {
 
     if (!selected) {
-        alert("Оберіть фото");
+        alert("Please select an image");
         return;
     }
 
@@ -70,7 +71,7 @@ uploadBtn.addEventListener("click", async () => {
 // =========================
 async function sendImage(item) {
 
-    resultContent.innerHTML = `<p>Обробка...</p>`;
+    resultContent.innerHTML = `<p>Processing...</p>`;
 
     const formData = new FormData();
 
@@ -93,21 +94,21 @@ async function sendImage(item) {
         }
 
         if (!data.is_cow) {
-            resultContent.innerHTML = `<p class="error">Корову не знайдено</p>`;
+            resultContent.innerHTML = `<p class="error">No cow detected</p>`;
             return;
         }
 
         resultContent.innerHTML = `
-            <p class="success">Корова визначена</p>
+            <p class="success">Cow detected successfully</p>
 
             <div class="result-item">
-                <div class="result-label">Впевненість (корова)</div>
+                <div class="result-label">Cow Detection Confidence</div>
                 <div class="result-value">${data.cow_confidence}%</div>
             </div>
 
             <div class="result-item">
-                <div class="result-label">Вага</div>
-                <div class="result-value">${data.predicted_weight} кг</div>
+                <div class="result-label">Weight</div>
+                <div class="result-value">${data.predicted_weight} kg</div>
             </div>
 
             <div class="result-item">
@@ -118,6 +119,6 @@ async function sendImage(item) {
 
     } catch (err) {
         console.error(err);
-        resultContent.innerHTML = `<p class="error">Помилка з'єднання з сервером</p>`;
+        resultContent.innerHTML = `<p class="error">Server connection error</p>`;
     }
 }
